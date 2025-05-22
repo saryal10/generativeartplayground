@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Generative CSS Art Playground</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container">
+        <h1>Generative CSS Art Playground</h1>
+        <p>Explore unique abstract art generated with pure CSS.</p>
+
+        <div class="controls-panel">
+            <div class="control-group">
+                <label for="numElements">Number of Elements:</label>
+                <input type="range" id="numElements" min="10" max="200" value="75">
+                <span id="numElementsValue">75</span>
+            </div>
+            <div class="control-group">
+                <label for="colorPalette">Color Palette:</label>
+                <select id="colorPalette">
+                    <option value="random" selected>Random (Vibrant)</option>
+                    <option value="pastel">Pastel</option>
+                    <option value="grayscale">Grayscale</option>
+                    <option value="warm">Warm Tones</option>
+                    <option value="cool">Cool Tones</option>
+                </select>
+            </div>
+            <button id="generateBtn">Generate New Art</button>
+            <button id="downloadBtn">Download Art (PNG)</button>
+        </div>
+
+        <div class="art-area-container">
+            <div id="artCanvas" class="art-canvas">
+                </div>
+        </div>
+
+        <div class="css-output-panel">
+            <h2>Generated CSS:</h2>
+            <pre><code id="generatedCssCode" class="language-css">/* Your generated CSS will appear here */</code></pre>
+            <button id="copyCssBtn">Copy CSS</button>
+        </div>
+
+        <div class="disclaimer">
+            This project uses `html2canvas` for image download functionality. Art is generated dynamically using JavaScript to create and style HTML elements.
+        </div>
+    </div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+    <script src="script.js"></script>
+</body>
+</html>
