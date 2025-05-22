@@ -1,0 +1,227 @@
+body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background-color: #f0f2f5;
+    color: #333;
+    margin: 0;
+    padding: 20px;
+    display: flex;
+    justify-content: center;
+    align-items: flex-start; /* Align to top to prevent stretching */
+    min-height: 100vh;
+    box-sizing: border-box;
+}
+
+.container {
+    background-color: #fff;
+    border-radius: 12px;
+    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.1);
+    padding: 35px;
+    max-width: 900px;
+    width: 100%;
+    text-align: center;
+}
+
+h1 {
+    color: #0056b3;
+    margin-bottom: 10px;
+    font-size: 2.2em;
+}
+
+p {
+    color: #666;
+    margin-bottom: 25px;
+    font-size: 1.1em;
+}
+
+/* Controls Panel */
+.controls-panel {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 20px;
+    margin-bottom: 30px;
+    padding: 20px;
+    background-color: #e9f5ff;
+    border-radius: 8px;
+    box-shadow: inset 0 2px 5px rgba(0, 0, 0, 0.05);
+}
+
+.control-group {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+}
+
+.control-group label {
+    margin-bottom: 8px;
+    font-weight: bold;
+    color: #0056b3;
+    font-size: 0.95em;
+}
+
+.control-group input[type="range"] {
+    width: 180px;
+    -webkit-appearance: none;
+    height: 8px;
+    background: #d3d3d3;
+    outline: none;
+    opacity: 0.7;
+    transition: opacity .2s;
+    border-radius: 5px;
+}
+
+.control-group input[type="range"]::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    appearance: none;
+    width: 20px;
+    height: 20px;
+    border-radius: 50%;
+    background: #007bff;
+    cursor: pointer;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.2);
+}
+
+.control-group input[type="range"]::-moz-range-thumb {
+    width: 20px;
+    height: 20px;
+    border-radius: 50%;
+    background: #007bff;
+    cursor: pointer;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.2);
+}
+
+.control-group #numElementsValue {
+    font-size: 0.9em;
+    color: #555;
+    margin-top: 5px;
+}
+
+.control-group select {
+    padding: 8px 12px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    background-color: #fff;
+    font-size: 0.9em;
+    cursor: pointer;
+}
+
+button {
+    background-color: #007bff;
+    color: white;
+    border: none;
+    border-radius: 6px;
+    padding: 12px 25px;
+    font-size: 1em;
+    cursor: pointer;
+    transition: background-color 0.3s ease, transform 0.1s ease;
+    box-shadow: 0 3px 8px rgba(0, 123, 255, 0.3);
+}
+
+button:hover {
+    background-color: #0056b3;
+    transform: translateY(-1px);
+}
+
+button#downloadBtn {
+    background-color: #28a745;
+    box-shadow: 0 3px 8px rgba(40, 167, 69, 0.3);
+}
+button#downloadBtn:hover {
+    background-color: #218838;
+}
+
+button#copyCssBtn {
+    background-color: #6c757d;
+    box-shadow: 0 3px 8px rgba(108, 117, 125, 0.3);
+    margin-top: 15px; /* Add margin to separate from code block */
+}
+button#copyCssBtn:hover {
+    background-color: #5a6268;
+}
+
+
+/* Art Canvas */
+.art-area-container {
+    width: 100%;
+    max-width: 600px; /* Define a max width for the art */
+    aspect-ratio: 1 / 1; /* Make it square */
+    margin: 0 auto 30px auto; /* Center and add margin */
+    border: 2px solid #ddd;
+    border-radius: 8px;
+    overflow: hidden; /* Important for absolute positioning */
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+    background-color: #fcfcfc; /* Light background for the canvas */
+    position: relative; /* Context for absolute children */
+}
+
+.art-canvas {
+    width: 100%;
+    height: 100%;
+    position: relative; /* Crucial for positioning generated elements */
+    background-color: #fcfcfc; /* Canvas background */
+}
+
+/* Base styles for generated elements */
+.art-element {
+    position: absolute;
+    /* Initial styles for variety */
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+    transition: transform 0.5s ease-out, background-color 0.5s ease-out; /* Optional: smooth transitions on regeneration */
+}
+
+
+/* CSS Output Panel */
+.css-output-panel {
+    margin-top: 30px;
+    text-align: left;
+}
+
+.css-output-panel h2 {
+    color: #0056b3;
+    margin-bottom: 10px;
+    font-size: 1.6em;
+}
+
+.css-output-panel pre {
+    background-color: #2b2b2b; /* Dark background for code */
+    color: #f8f8f2; /* Light text color */
+    padding: 15px;
+    border-radius: 8px;
+    overflow-x: auto; /* Enable horizontal scrolling for long lines */
+    font-family: 'SFMono-Regular', Consolas, 'Liberation Mono', Menlo, monospace;
+    font-size: 0.9em;
+    line-height: 1.4;
+    white-space: pre-wrap; /* Wrap long lines */
+    word-wrap: break-word; /* Break words for really long lines */
+    max-height: 300px; /* Limit height */
+}
+
+/* Disclaimer */
+.disclaimer {
+    font-size: 0.8em;
+    color: #888;
+    margin-top: 40px;
+    padding-top: 20px;
+    border-top: 1px dashed #e0e0e0;
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+    .container {
+        padding: 20px;
+    }
+    .controls-panel {
+        flex-direction: column;
+        align-items: stretch;
+    }
+    .control-group {
+        align-items: center;
+    }
+    button {
+        width: 100%;
+        margin-top: 10px;
+    }
+    .art-area-container {
+        max-width: 100%; /* Allow full width on smaller screens */
+    }
+}
