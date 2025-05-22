@@ -6,7 +6,7 @@ body {
     padding: 20px;
     display: flex;
     justify-content: center;
-    align-items: flex-start; /* Align to top to prevent stretching */
+    align-items: flex-start;
     min-height: 100vh;
     box-sizing: border-box;
 }
@@ -133,42 +133,54 @@ button#downloadBtn:hover {
 button#copyCssBtn {
     background-color: #6c757d;
     box-shadow: 0 3px 8px rgba(108, 117, 125, 0.3);
-    margin-top: 15px; /* Add margin to separate from code block */
+    margin-top: 15px;
 }
 button#copyCssBtn:hover {
     background-color: #5a6268;
 }
 
-
 /* Art Canvas */
 .art-area-container {
     width: 100%;
-    max-width: 600px; /* Define a max width for the art */
-    aspect-ratio: 1 / 1; /* Make it square */
-    margin: 0 auto 30px auto; /* Center and add margin */
+    max-width: 600px;
+    aspect-ratio: 1 / 1;
+    margin: 0 auto 30px auto;
     border: 2px solid #ddd;
     border-radius: 8px;
-    overflow: hidden; /* Important for absolute positioning */
+    overflow: hidden;
     box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
-    background-color: #fcfcfc; /* Light background for the canvas */
-    position: relative; /* Context for absolute children */
+    background-color: #fcfcfc;
+    position: relative;
 }
 
 .art-canvas {
     width: 100%;
     height: 100%;
-    position: relative; /* Crucial for positioning generated elements */
-    background-color: #fcfcfc; /* Canvas background */
+    position: relative;
+    background-color: #fcfcfc;
 }
 
 /* Base styles for generated elements */
 .art-element {
     position: absolute;
-    /* Initial styles for variety */
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
-    transition: transform 0.5s ease-out, background-color 0.5s ease-out; /* Optional: smooth transitions on regeneration */
+    /* transition: transform 0.5s ease-out, background-color 0.5s ease-out, filter 0.5s ease-out; */
+    /* Removed transition on regeneration to avoid flicker with animations */
 }
 
+/* Keyframe Animations for "Lifelike" Movement */
+@keyframes pulse {
+    0% { transform: scale(1); opacity: 1; }
+    50% { transform: scale(1.03); opacity: 0.95; }
+    100% { transform: scale(1); opacity: 1; }
+}
+
+@keyframes float {
+    0% { transform: translateY(0) rotate(0deg); }
+    25% { transform: translateY(-5px) rotate(1deg); }
+    50% { transform: translateY(0) rotate(0deg); }
+    75% { transform: translateY(5px) rotate(-1deg); }
+    100% { transform: translateY(0) rotate(0deg); }
+}
 
 /* CSS Output Panel */
 .css-output-panel {
@@ -183,17 +195,17 @@ button#copyCssBtn:hover {
 }
 
 .css-output-panel pre {
-    background-color: #2b2b2b; /* Dark background for code */
-    color: #f8f8f2; /* Light text color */
+    background-color: #2b2b2b;
+    color: #f8f8f2;
     padding: 15px;
     border-radius: 8px;
-    overflow-x: auto; /* Enable horizontal scrolling for long lines */
+    overflow-x: auto;
     font-family: 'SFMono-Regular', Consolas, 'Liberation Mono', Menlo, monospace;
     font-size: 0.9em;
     line-height: 1.4;
-    white-space: pre-wrap; /* Wrap long lines */
-    word-wrap: break-word; /* Break words for really long lines */
-    max-height: 300px; /* Limit height */
+    white-space: pre-wrap;
+    word-wrap: break-word;
+    max-height: 300px;
 }
 
 /* Disclaimer */
@@ -222,6 +234,6 @@ button#copyCssBtn:hover {
         margin-top: 10px;
     }
     .art-area-container {
-        max-width: 100%; /* Allow full width on smaller screens */
+        max-width: 100%;
     }
 }
