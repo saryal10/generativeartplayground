@@ -8,22 +8,28 @@ document.addEventListener('DOMContentLoaded', () => {
     const generatedCssCode = document.getElementById('generatedCssCode');
     const copyCssBtn = document.getElementById('copyCssBtn');
 
-    // --- Color Palette Definitions ---
+    // --- Color Palette Definitions (more curated palettes) ---
     const palettes = {
-        random: null, // Indicates truly random generation
-        pastel: [
-            { h: [0, 360], s: [70, 90], l: [75, 90] }, // Light, muted colors
+        vibrant: null, // Indicates truly random generation (previous "random")
+        organic: [
+            { h: [20, 50], s: [20, 60], l: [50, 80] }, // Earthy greens, browns, muted yellows
+            { h: [80, 150], s: [20, 50], l: [40, 70] }, // Muted greens, moss
+            { h: [200, 240], s: [10, 40], l: [60, 80] } // Soft blues, greys
         ],
-        grayscale: [
-            { h: [0, 0], s: [0, 0], l: [20, 80] }, // Black to white
+        deepOcean: [
+            { h: [200, 240], s: [70, 100], l: [20, 50] }, // Deep blues
+            { h: [180, 200], s: [60, 90], l: [30, 60] }, // Turquoises, teals
+            { h: [250, 270], s: [50, 80], l: [20, 40] }  // Dark purples
         ],
-        warm: [
-            { h: [0, 60], s: [70, 100], l: [40, 70] }, // Reds, Oranges, Yellows
-            { h: [330, 20], s: [80, 100], l: [50, 70] } // Pinks, light reds
+        forestMist: [
+            { h: [90, 150], s: [20, 50], l: [30, 60] }, // Forest greens
+            { h: [180, 220], s: [10, 30], l: [50, 70] }, // Misty blues/greys
+            { h: [30, 60], s: [10, 30], l: [40, 60] } // Muted yellows/browns
         ],
-        cool: [
-            { h: [180, 240], s: [70, 100], l: [40, 70] }, // Blues, Cyans
-            { h: [90, 150], s: [70, 100], l: [40, 70] } // Greens
+        sunsetGlow: [
+            { h: [0, 40], s: [80, 100], l: [50, 80] },   // Vibrant reds, oranges
+            { h: [40, 60], s: [80, 100], l: [60, 90] },  // Bright yellows
+            { h: [280, 320], s: [60, 90], l: [40, 70] } // Pinks, magentas
         ]
     };
 
@@ -36,12 +42,17 @@ document.addEventListener('DOMContentLoaded', () => {
         return Math.random() * (max - min) + min;
     }
 
+    // Generates a random border-radius for blob shapes
+    function getBlobBorderRadius() {
+        return `${getRandomInt(30, 70)}% ${getRandomInt(30, 70)}% ${getRandomInt(30, 70)}% ${getRandomInt(30, 70)}% / ${getRandomInt(30, 70)}% ${getRandomInt(30, 70)}% ${getRandomInt(30, 70)}% ${getRandomInt(30, 70)}%`;
+    }
+
     function getRandomColor(paletteType) {
-        if (paletteType === 'random' || !palettes[paletteType]) {
-            // Truly random color
+        if (paletteType === 'vibrant' || !palettes[paletteType]) {
+            // Truly random vibrant color
             const h = getRandomInt(0, 360);
-            const s = getRandomInt(50, 100); // Keep saturation high for vibrancy
-            const l = getRandomInt(40, 80);  // Keep lightness in a good range
+            const s = getRandomInt(70, 100);
+            const l = getRandomInt(40, 75);
             return `hsl(${h}, ${s}%, ${l}%)`;
         } else {
             // Pick from predefined palette constraints
@@ -53,25 +64,62 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     }
 
+    // Function to get generated CSS
     function getGeneratedCssString() {
         let css = '';
         artCanvas.querySelectorAll('.art-element').forEach((element, index) => {
+            const elStyle = element.style;
             css += `.art-element-${index + 1} {\n`;
-            css += `    position: absolute;\n`; // Add position absolute as it's common to all
-            css += `    width: ${element.style.width};\n`;
-            css += `    height: ${element.style.height};\n`;
-            css += `    top: ${element.style.top};\n`;
-            css += `    left: ${element.style.left};\n`;
-            css += `    background-color: ${element.style.backgroundColor};\n`;
-            css += `    border-radius: ${element.style.borderRadius};\n`;
-            css += `    transform: ${element.style.transform};\n`;
-            if (element.style.boxShadow) {
-                css += `    box-shadow: ${element.style.boxShadow};\n`;
+            css += `    position: absolute;\n`;
+            css += `    width: ${elStyle.width};\n`;
+            css += `    height: ${elStyle.height};\n`;
+            css += `    top: ${elStyle.top};\n`;
+            css += `    left: ${elStyle.left};\n`;
+            css += `    background-color: ${elStyle.backgroundColor};\n`;
+            css += `    border-radius: ${elStyle.borderRadius};\n`;
+            css += `    transform: ${elStyle.transform};\n`;
+            if (elStyle.boxShadow) {
+                css += `    box-shadow: ${elStyle.boxShadow};\n`;
             }
-            css += `    opacity: ${element.style.opacity};\n`;
-            css += `    z-index: ${element.style.zIndex};\n`;
+            css += `    opacity: ${elStyle.opacity};\n`;
+            css += `    z-index: ${elStyle.zIndex};\n`;
+            if (elStyle.filter) {
+                css += `    filter: ${elStyle.filter};\n`;
+            }
+            if (elStyle.animation) {
+                 // Clean up the animation name to remove random suffixes for simpler CSS copy
+                const animationName = elStyle.animation.split(' ')[0].replace(/-\d+$/, '');
+                const animationProps = elStyle.animation.split(' ').slice(1).join(' ');
+                css += `    animation: ${animationName} ${animationProps};\n`;
+            }
             css += `}\n\n`;
         });
+
+        // Also include the keyframe definitions if they are used
+        const animationNamesUsed = new Set();
+        artCanvas.querySelectorAll('.art-element').forEach(element => {
+            if (element.style.animation) {
+                animationNamesUsed.add(element.style.animation.split(' ')[0].replace(/-\d+$/, ''));
+            }
+        });
+
+        if (animationNamesUsed.has('pulse')) {
+            css += `@keyframes pulse {\n`;
+            css += `    0% { transform: scale(1); opacity: 1; }\n`;
+            css += `    50% { transform: scale(1.03); opacity: 0.95; }\n`;
+            css += `    100% { transform: scale(1); opacity: 1; }\n`;
+            css += `}\n\n`;
+        }
+        if (animationNamesUsed.has('float')) {
+            css += `@keyframes float {\n`;
+            css += `    0% { transform: translateY(0) rotate(0deg); }\n`;
+            css += `    25% { transform: translateY(-5px) rotate(1deg); }\n`;
+            css += `    50% { transform: translateY(0) rotate(0deg); }\n`;
+            css += `    75% { transform: translateY(5px) rotate(-1deg); }\n`;
+            css += `    100% { transform: translateY(0) rotate(0deg); }\n`;
+            css += `}\n\n`;
+        }
+
         return css;
     }
 
@@ -80,25 +128,30 @@ document.addEventListener('DOMContentLoaded', () => {
     function generateArt() {
         // Clear previous art
         artCanvas.innerHTML = '';
-        generatedCssCode.textContent = ''; // Clear CSS output
+        generatedCssCode.textContent = '';
         const numElements = parseInt(numElementsInput.value);
         const selectedPalette = colorPaletteSelect.value;
-        let cssString = '';
+
+        // Determine canvas size for percentage calculations
+        const canvasWidth = artCanvas.offsetWidth;
+        const canvasHeight = artCanvas.offsetHeight;
+
 
         for (let i = 0; i < numElements; i++) {
             const element = document.createElement('div');
             element.classList.add('art-element', `art-element-${i + 1}`);
 
             // Randomize properties
-            const width = getRandomInt(20, 200);
-            const height = getRandomInt(20, 200);
-            const top = getRandomInt(-50, 100); // Allow elements to start outside the canvas slightly
-            const left = getRandomInt(-50, 100);
+            const width = getRandomInt(40, 250);
+            const height = getRandomInt(40, 250);
+            const top = getRandomInt(-20, 120); // Allow elements to start outside the canvas slightly
+            const left = getRandomInt(-20, 120);
             const bgColor = getRandomColor(selectedPalette);
-            const borderRadius = `${getRandomInt(0, 100)}% ${getRandomInt(0, 100)}% ${getRandomInt(0, 100)}% ${getRandomInt(0, 100)}% / ${getRandomInt(0, 100)}% ${getRandomInt(0, 100)}% ${getRandomInt(0, 100)}% ${getRandomInt(0, 100)}%`; // Elliptical or circular shapes
+            const borderRadius = getBlobBorderRadius(); // Use blob shapes
             const rotation = getRandomInt(0, 360);
-            const opacity = getRandomFloat(0.5, 1.0); // Slightly transparent to allow layering
-            const zIndex = getRandomInt(1, numElements); // Layering order
+            const opacity = getRandomFloat(0.4, 0.9); // More transparency for layering
+            const zIndex = getRandomInt(1, numElements);
+            const blurAmount = (zIndex / numElements) * getRandomFloat(0, 5); // More blur for elements further back
 
             element.style.width = `${width}px`;
             element.style.height = `${height}px`;
@@ -106,19 +159,28 @@ document.addEventListener('DOMContentLoaded', () => {
             element.style.left = `${left}%`;
             element.style.backgroundColor = bgColor;
             element.style.borderRadius = borderRadius;
-            element.style.transform = `translate(-50%, -50%) rotate(${rotation}deg)`; // Center element and rotate
+            // Apply initial transform including center translation and rotation
+            element.style.transform = `translate(-50%, -50%) rotate(${rotation}deg)`;
             element.style.opacity = opacity;
             element.style.zIndex = zIndex;
+            element.style.filter = `blur(${blurAmount.toFixed(1)}px)`; // Apply blur
 
-            // Optional: Random box-shadow
-            if (Math.random() > 0.3) { // 70% chance of a shadow
-                const offsetX = getRandomInt(-10, 10);
-                const offsetY = getRandomInt(-10, 10);
-                const blur = getRandomInt(5, 20);
+            // Optional: Random box-shadow for depth
+            if (Math.random() > 0.4) { // 60% chance of a shadow
+                const offsetX = getRandomInt(-15, 15);
+                const offsetY = getRandomInt(-15, 15);
+                const blur = getRandomInt(10, 30);
                 const spread = getRandomInt(-5, 5);
-                const shadowColor = `rgba(0, 0, 0, ${getRandomFloat(0.1, 0.4).toFixed(2)})`;
+                const shadowColor = `rgba(0, 0, 0, ${getRandomFloat(0.1, 0.3).toFixed(2)})`;
                 element.style.boxShadow = `${offsetX}px ${offsetY}px ${blur}px ${spread}px ${shadowColor}`;
             }
+
+            // Apply subtle animation
+            const animationType = Math.random() > 0.5 ? 'pulse' : 'float';
+            const animationDuration = getRandomFloat(8, 20); // Longer durations for subtlety
+            const animationDelay = getRandomFloat(0, animationDuration * -1); // Stagger animations
+            element.style.animation = `${animationType} ${animationDuration.toFixed(1)}s infinite ${animationDelay.toFixed(1)}s alternate ease-in-out`;
+
 
             artCanvas.appendChild(element);
         }
@@ -133,14 +195,14 @@ document.addEventListener('DOMContentLoaded', () => {
     });
 
     generateBtn.addEventListener('click', generateArt);
-    colorPaletteSelect.addEventListener('change', generateArt); // Regenerate when palette changes
-    numElementsInput.addEventListener('change', generateArt); // Regenerate when range input is released
+    colorPaletteSelect.addEventListener('change', generateArt);
+    numElementsInput.addEventListener('change', generateArt);
 
     downloadBtn.addEventListener('click', () => {
         // Use html2canvas to capture the artCanvas
         html2canvas(artCanvas, {
             scale: 2, // Capture at a higher resolution for better quality
-            backgroundColor: artCanvas.style.backgroundColor || getComputedStyle(artCanvas).backgroundColor // Ensure background is captured
+            backgroundColor: artCanvas.style.backgroundColor || getComputedStyle(artCanvas).backgroundColor
         }).then(canvas => {
             const link = document.createElement('a');
             link.download = 'generative_art.png';
